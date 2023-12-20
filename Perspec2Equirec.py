@@ -5,14 +5,14 @@ import Equirec2Perspec as EP
 
 
 class Perspective:
-    def __init__(self, img):
-        self._img = img
-        self.height, self.width, _ = self._img.shape
+    def __init__(self, img: np.ndarray):
+        self.img = img
+        self.img_height, self.img_width, _ = self.img.shape
 
     def GetEquirectangular(self, FOV, THETA, PHI, final_height, final_width):
-        f = 0.5 * self.width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
-        cx = (self.width - 1) / 2.0
-        cy = (self.height - 1) / 2.0
+        f = 0.5 * self.img_width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
+        cx = (self.img_width - 1) / 2.0
+        cy = (self.img_height - 1) / 2.0
         K = np.array(
             [
                 [f, 0, cx],
@@ -23,8 +23,8 @@ class Perspective:
         )
         K_inv = np.linalg.inv(K)
 
-        x = np.arange(self.width)
-        y = np.arange(self.height)
+        x = np.arange(self.img_width)
+        y = np.arange(self.img_height)
         x, y = np.meshgrid(x, y)
         z = np.ones_like(x)
         xyz = np.concatenate([x[..., None], y[..., None], z[..., None]], axis=-1)
@@ -45,7 +45,7 @@ class Perspective:
             for j in range(XY.shape[1]):
                 x = int(XY[i, j, 0])
                 y = int(XY[i, j, 1])
-                result[y - 1, x - 1] = self._img[i, j]
+                result[y - 1, x - 1] = self.img[i, j]
 
         xrange = np.arange(final_width)
         yrange = np.arange(final_height)
