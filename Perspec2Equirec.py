@@ -9,7 +9,14 @@ class Perspective:
         self.img = img
         self.img_height, self.img_width, _ = self.img.shape
 
-    def GetEquirectangular(self, FOV, THETA, PHI, final_height, final_width):
+    def GetCanvasPixelIndex(
+        self,
+        FOV: float,
+        THETA: float,
+        PHI: float,
+        final_height: int,
+        final_width: int,
+    ) -> np.ndarray:
         f = 0.5 * self.img_width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
         cx = (self.img_width - 1) / 2.0
         cy = (self.img_height - 1) / 2.0
@@ -37,7 +44,19 @@ class Perspective:
         R = R2 @ R1
         xyz = xyz @ R.T
         lonlat = EP.xyz2lonlat(xyz)
-        XY = EP.lonlat2XY(lonlat, shape=(final_height, final_width)).astype(np.float32)
+        return EP.lonlat2XY(lonlat, shape=(final_height, final_width)).astype(
+            np.float32
+        )
+
+    def GetEquirectangular(
+        self,
+        FOV: float,
+        THETA: float,
+        PHI: float,
+        final_height: int,
+        final_width: int,
+    ):
+        XY = self.GetCanvasPixelIndex(FOV, THETA, PHI, final_height, final_width)
 
         result = np.full((final_height, final_width, 3), np.nan)
 
