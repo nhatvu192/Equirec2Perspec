@@ -14,8 +14,8 @@ class Perspective:
         FOV: float,
         THETA: float,
         PHI: float,
-        final_height: int,
-        final_width: int,
+        canvas_height: int,
+        canvas_width: int,
     ) -> np.ndarray:
         f = 0.5 * self.img_width * 1 / np.tan(0.5 * FOV / 180.0 * np.pi)
         cx = (self.img_width - 1) / 2.0
@@ -44,7 +44,7 @@ class Perspective:
         R = R2 @ R1
         xyz = xyz @ R.T
         lonlat = EP.xyz2lonlat(xyz)
-        return EP.lonlat2XY(lonlat, shape=(final_height, final_width)).astype(
+        return EP.lonlat2XY(lonlat, shape=(canvas_height, canvas_width)).astype(
             np.float32
         )
 
@@ -53,12 +53,12 @@ class Perspective:
         FOV: float,
         THETA: float,
         PHI: float,
-        final_height: int,
-        final_width: int,
+        canvas_height: int,
+        canvas_width: int,
     ):
-        XY = self.GetCanvasPixelIndex(FOV, THETA, PHI, final_height, final_width)
+        XY = self.GetCanvasPixelIndex(FOV, THETA, PHI, canvas_height, canvas_width)
 
-        result = np.full((final_height, final_width, 3), np.nan)
+        result = np.full((canvas_height, canvas_width, 3), np.nan)
 
         for i in range(XY.shape[0]):
             for j in range(XY.shape[1]):
@@ -66,8 +66,8 @@ class Perspective:
                 y = int(XY[i, j, 1])
                 result[y - 1, x - 1] = self.img[i, j]
 
-        xrange = np.arange(final_width)
-        yrange = np.arange(final_height)
+        xrange = np.arange(canvas_width)
+        yrange = np.arange(canvas_height)
 
         mask = np.ma.masked_invalid(result[..., 0]).mask
 
