@@ -91,7 +91,40 @@ class Perspective:
         PHI: float,
         canvas_height: int,
         canvas_width: int,
-    ):
+    ) -> np.ndarray:
+        """
+        Given field of view, left/right and up/down viewing angle, the size of the
+        equirectangular canvas, and the the input perspective image, paint the
+        perspective image on to the corresponding location in the equirectangular
+        canvas.
+
+        The steps performed in this function are as follow.
+        1. For each pixel in the perspective image, compute a corresponding
+        pixel in the equirectangular image.
+
+        2. Initialize an empty canvas
+
+        3. Fill the canvas using the mapping from step 1.
+
+        4. Perform interpolation on the filled canvas.
+
+        5. Fill the remaining missing values with 0.
+
+        Args:
+            FOV: angle of fiew of view
+
+            THETA: left/right viewing angle
+
+            PHI: up/down viewing angle
+
+            canvas_height: height of the equirectangular canvas to draw on
+
+            canvas_width: width of the equirectangular canvas to draw on
+
+        Returns:
+            A numpy array of size (canvas_height, canvas_width, 3) with the
+            perspective image drawn at the appropriate location and 0 everywhere.
+        """
         XY = self.GetCanvasPixelIndex(FOV, THETA, PHI, canvas_height, canvas_width)
 
         result = np.full((canvas_height, canvas_width, 3), np.nan)
