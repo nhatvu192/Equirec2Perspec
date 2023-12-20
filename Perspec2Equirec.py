@@ -127,27 +127,29 @@ class Perspective:
         """
         XY = self.GetCanvasPixelIndex(FOV, THETA, PHI, canvas_height, canvas_width)
 
-        result = np.full((canvas_height, canvas_width, 3), np.nan)
+        canvas = np.full((canvas_height, canvas_width, 3), np.nan)
 
-        for i in range(XY.shape[0]):
-            for j in range(XY.shape[1]):
-                x = int(XY[i, j, 0])
-                y = int(XY[i, j, 1])
-                result[y - 1, x - 1] = self.img[i, j]
+        for perspective_index_y in range(XY.shape[0]):
+            for perspective_index_x in range(XY.shape[1]):
+                canvas_index_x = int(XY[perspective_index_y, perspective_index_x, 0])
+                canvas_index_y = int(XY[perspective_index_y, perspective_index_x, 1])
+                canvas[canvas_index_y - 1, canvas_index_x - 1] = self.img[
+                    perspective_index_y, perspective_index_x
+                ]
 
         xrange = np.arange(canvas_width)
         yrange = np.arange(canvas_height)
 
-        mask = np.ma.masked_invalid(result[..., 0]).mask
+        mask = np.ma.masked_invalid(canvas[..., 0]).mask
 
         xx, yy = np.meshgrid(xrange, yrange)
 
-        result = interpolate.griddata(
+        canvas = interpolate.griddata(
             (xx[~mask], yy[~mask]),
-            result[~mask].reshape(-1, 3),
+            canvas[~mask].reshape(-1, 3),
             (xx, yy),
         )
 
-        result = np.where(np.isnan(result), 0, result)
+        canvas = np.where(np.isnan(canvas), 0, canvas)
 
-        return result.astype(np.uint8)
+        return canvas.astype(np.uint8)
