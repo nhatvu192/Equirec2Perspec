@@ -133,7 +133,7 @@ class Perspective:
             for perspective_index_x in range(XY.shape[1]):
                 canvas_index_x = int(XY[perspective_index_y, perspective_index_x, 0])
                 canvas_index_y = int(XY[perspective_index_y, perspective_index_x, 1])
-                canvas[canvas_index_y - 1, canvas_index_x - 1] = self.img[
+                canvas[canvas_index_y, canvas_index_x] = self.img[
                     perspective_index_y, perspective_index_x
                 ]
 
