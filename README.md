@@ -1,3 +1,24 @@
+# Perspec2Equirec
+## Introduction
+The file `Perspec2Equirec.py` is the solution to the homework assignment.
+
+## Usage
+Below shows an example of code for carving out a perspective image from the original Equirectangular image using `Equirec2Perspec` and projecting the perspective back in an empty canvas of the same size using my `Perspec2Equirec`.
+
+```python
+import os
+import Equirec2Perspec as E2P
+import Perspec2Equirec as P2E
+
+FOV, THETA, PHI = 60, 100, 0
+equ = E2P.Equirectangular(os.path.join('src', 'image.jpg'))    # Load equirectangular image
+persp_img = equ.GetPerspective(FOV, THETA, PHI, 720, 1080)
+persp = P2E.Perspective(persp_img)
+equ_img = persp.GetEquirectangular(FOV,THETA,PHI, equ._height, equ._width)
+```
+
+An example of usage can also be seen in `test.ipynb`
+
 # Equirec2Perspec
 ## Introduction
 <strong>Equirec2Perspec</strong> is a python tool to split equirectangular panorama into normal perspective view.
