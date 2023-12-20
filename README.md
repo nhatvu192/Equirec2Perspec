@@ -1,6 +1,15 @@
 # Perspec2Equirec
+
 ## Introduction
 The file `Perspec2Equirec.py` is the solution to the homework assignment.
+
+## Installation
+Run the following commands to create venv and install the necessary packages
+```
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
 ## Usage
 Below shows an example of code for carving out a perspective image from the original Equirectangular image using `Equirec2Perspec` and projecting the perspective back in an empty canvas of the same size using my `Perspec2Equirec`.
