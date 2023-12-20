@@ -139,10 +139,9 @@ class Perspective:
 
         xrange = np.arange(canvas_width)
         yrange = np.arange(canvas_height)
+        xx, yy = np.meshgrid(xrange, yrange)
 
         mask = np.ma.masked_invalid(canvas[..., 0]).mask
-
-        xx, yy = np.meshgrid(xrange, yrange)
 
         canvas = interpolate.griddata(
             (xx[~mask], yy[~mask]),
